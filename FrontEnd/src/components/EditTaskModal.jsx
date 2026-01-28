@@ -152,6 +152,7 @@
 import { useEffect, useState } from "react";
 import { apiFetch } from "../services/api";
 import { toast } from "react-toastify";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function EditTaskModal({
   open,
@@ -169,7 +170,7 @@ export default function EditTaskModal({
   useEffect(() => {
     if (!open) return;
 
-    apiFetch("http://localhost:4000/api/users")
+    apiFetch("/api/users")
       .then(setUsers)
       .catch(() => {});
   }, [open]);
@@ -191,7 +192,7 @@ export default function EditTaskModal({
       setLoading(true);
 
       await apiFetch(
-        `http://localhost:4000/api/tasks/${task.id}`,
+        `/api/tasks/${task.id}`,
         {
           method: "PUT",
           body: JSON.stringify({

@@ -207,13 +207,209 @@
 // }
 
 
+// import { useEffect, useState } from "react";
+// import AdminLayout from "../layouts/AdminLayout";
+// import StatCard from "../components/StatCard";
+// import QuickActionCard from "../components/QuickActionCard";
+// import { auth } from "../firebase";
+// import { useNavigate } from "react-router-dom";
+// import CreateTaskModal from "../components/CreateTaskModal";
+// import { apiFetch } from "../services/api";
+
+// export default function AdminDashboard() {
+//   const [stats, setStats] = useState(null);
+//   const [loading, setLoading] = useState(true);
+//   const [openModal, setOpenModal] = useState(false);
+
+//   const navigate = useNavigate();
+
+//   // 🔥 stats fetch function
+//   const fetchStats = async () => {
+//     const user = auth.currentUser;
+//     if (!user) return;
+
+//     const token = await user.getIdToken();
+
+//     const res = await apiFetch("/api/tasks/stats", {
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//       },
+//     });
+
+//     const data = await res.json();
+//     setStats(data);
+//     setLoading(false);
+//   };
+
+//   useEffect(() => {
+//     fetchStats();
+//   }, []);
+
+//   if (loading) {
+//     return (
+//       <AdminLayout>
+//         <p className="text-gray-500">Loading dashboard...</p>
+//       </AdminLayout>
+//     );
+//   }
+
+//   return (
+//     <AdminLayout>
+//       {/* ✅ Create Task Modal */}
+//       <CreateTaskModal
+//         open={openModal}
+//         onClose={() => setOpenModal(false)}
+//         onCreated={fetchStats}   // 🔥 AUTO REFRESH
+//       />
+
+//       <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
+
+//       {/* STATS */}
+//       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+//         <StatCard title="Total Tasks" count={stats.total} color="from-blue-400 to-blue-600" />
+//         <StatCard title="Pending Tasks" count={stats.pending} color="from-orange-400 to-orange-600" />
+//         <StatCard title="In Progress" count={stats.inProgress} color="from-purple-400 to-purple-600" />
+//         <StatCard title="Completed" count={stats.completed} color="from-green-400 to-green-600" />
+//       </div>
+
+//       {/* QUICK ACTIONS */}
+//       <div>
+//         <h2 className="text-lg font-semibold mb-4">Quick actions</h2>
+
+//         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+//           <div onClick={() => navigate("/admin/tasks")}>
+//             <QuickActionCard
+//               title="All Tasks"
+//               subtitle="View and manage all posted tasks"
+//             />
+//           </div>
+
+//           <div onClick={() => setOpenModal(true)}>
+//             <QuickActionCard
+//               title="Create Task"
+//               subtitle="Create new task and assign users"
+//             />
+//           </div>
+//         </div>
+//       </div>
+//     </AdminLayout>
+//   );
+// }
+
+
+// import { useEffect, useState } from "react";
+// import AdminLayout from "../layouts/AdminLayout";
+// import StatCard from "../components/StatCard";
+// import QuickActionCard from "../components/QuickActionCard";
+// import { useNavigate } from "react-router-dom";
+// import CreateTaskModal from "../components/CreateTaskModal";
+// import { apiFetch } from "../services/api";
+
+// export default function AdminDashboard() {
+//   const [stats, setStats] = useState(null);
+//   const [loading, setLoading] = useState(true);
+//   const [openModal, setOpenModal] = useState(false);
+
+//   const navigate = useNavigate();
+
+//   // 🔥 FIXED stats fetch (ONLY THIS WAS WRONG)
+//   const fetchStats = async () => {
+//     try {
+//       setLoading(true);
+
+//       // ✅ apiFetch already:
+//       // - adds token
+//       // - parses JSON
+//       // - handles errors
+//       const data = await apiFetch("/api/tasks/stats");
+
+//       setStats(data);
+//     } catch (err) {
+//       console.error("Failed to fetch stats:", err.message);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   useEffect(() => {
+//     fetchStats();
+//   }, []);
+
+//   if (loading) {
+//     return (
+//       <AdminLayout>
+//         <p className="text-gray-500">Loading dashboard...</p>
+//       </AdminLayout>
+//     );
+//   }
+
+//   return (
+//     <AdminLayout>
+//       {/* ✅ Create Task Modal */}
+//       <CreateTaskModal
+//         open={openModal}
+//         onClose={() => setOpenModal(false)}
+//         onCreated={fetchStats}   // 🔥 AUTO REFRESH AFTER CREATE
+//       />
+
+//       <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
+
+//       {/* STATS */}
+//       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+//         <StatCard
+//           title="Total Tasks"
+//           count={stats.total}
+//           color="from-blue-400 to-blue-600"
+//         />
+//         <StatCard
+//           title="Pending Tasks"
+//           count={stats.pending}
+//           color="from-orange-400 to-orange-600"
+//         />
+//         <StatCard
+//           title="In Progress"
+//           count={stats.inProgress}
+//           color="from-purple-400 to-purple-600"
+//         />
+//         <StatCard
+//           title="Completed"
+//           count={stats.completed}
+//           color="from-green-400 to-green-600"
+//         />
+//       </div>
+
+//       {/* QUICK ACTIONS */}
+//       <div>
+//         <h2 className="text-lg font-semibold mb-4">Quick actions</h2>
+
+//         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+//           <div onClick={() => navigate("/admin/tasks")}>
+//             <QuickActionCard
+//               title="All Tasks"
+//               subtitle="View and manage all posted tasks"
+//             />
+//           </div>
+
+//           <div onClick={() => setOpenModal(true)}>
+//             <QuickActionCard
+//               title="Create Task"
+//               subtitle="Create new task and assign users"
+//             />
+//           </div>
+//         </div>
+//       </div>
+//     </AdminLayout>
+//   );
+// }
+
+
 import { useEffect, useState } from "react";
 import AdminLayout from "../layouts/AdminLayout";
 import StatCard from "../components/StatCard";
 import QuickActionCard from "../components/QuickActionCard";
-import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import CreateTaskModal from "../components/CreateTaskModal";
+import { apiFetch } from "../services/api";
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState(null);
@@ -222,22 +418,17 @@ export default function AdminDashboard() {
 
   const navigate = useNavigate();
 
-  // 🔥 stats fetch function
+  // 🔥 stats fetch (UNCHANGED)
   const fetchStats = async () => {
-    const user = auth.currentUser;
-    if (!user) return;
-
-    const token = await user.getIdToken();
-
-    const res = await fetch("http://localhost:4000/api/tasks/stats", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    const data = await res.json();
-    setStats(data);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const data = await apiFetch("/api/tasks/stats");
+      setStats(data);
+    } catch (err) {
+      console.error("Failed to fetch stats:", err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -254,24 +445,54 @@ export default function AdminDashboard() {
 
   return (
     <AdminLayout>
-      {/* ✅ Create Task Modal */}
+      {/* ✅ Create Task Modal (UNCHANGED) */}
       <CreateTaskModal
         open={openModal}
         onClose={() => setOpenModal(false)}
-        onCreated={fetchStats}   // 🔥 AUTO REFRESH
+        onCreated={fetchStats}
       />
 
       <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
 
-      {/* STATS */}
+      {/* ✅ STATS WITH SMOOTH ANIMATION */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <StatCard title="Total Tasks" count={stats.total} color="from-blue-400 to-blue-600" />
-        <StatCard title="Pending Tasks" count={stats.pending} color="from-orange-400 to-orange-600" />
-        <StatCard title="In Progress" count={stats.inProgress} color="from-purple-400 to-purple-600" />
-        <StatCard title="Completed" count={stats.completed} color="from-green-400 to-green-600" />
+        {[
+          {
+            title: "Total Tasks",
+            count: stats.total,
+            color: "from-blue-400 to-blue-600",
+          },
+          {
+            title: "Pending Tasks",
+            count: stats.pending,
+            color: "from-orange-400 to-orange-600",
+          },
+          {
+            title: "In Progress",
+            count: stats.inProgress,
+            color: "from-purple-400 to-purple-600",
+          },
+          {
+            title: "Completed",
+            count: stats.completed,
+            color: "from-green-400 to-green-600",
+          },
+        ].map((card, index) => (
+          <div
+            key={card.title}
+            className="animate-adminStat"
+            style={{ animationDelay: `${index * 80}ms` }}
+          >
+            <StatCard
+              title={card.title}
+              count={card.count}
+              color={card.color}
+            />
+          </div>
+        ))}
       </div>
 
-      {/* QUICK ACTIONS */}
+      {/* QUICK ACTIONS (UNCHANGED) */}
       <div>
         <h2 className="text-lg font-semibold mb-4">Quick actions</h2>
 
@@ -291,6 +512,27 @@ export default function AdminDashboard() {
           </div>
         </div>
       </div>
+
+      {/* 🔥 STAT CARD ANIMATION (ADMIN ONLY) */}
+      <style>
+        {`
+          @keyframes adminStatIn {
+            from {
+              opacity: 0;
+              transform: translateY(10px) scale(0.96);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0) scale(1);
+            }
+          }
+
+          .animate-adminStat {
+            animation: adminStatIn 0.45s ease-out forwards;
+            opacity: 0;
+          }
+        `}
+      </style>
     </AdminLayout>
   );
 }

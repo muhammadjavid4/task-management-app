@@ -285,7 +285,7 @@ export default function TaskDetailsPanel({ task, onClose, onDeleted }) {
   const handleDelete = async () => {
     try {
       setLoading(true);
-      await apiFetch(`http://localhost:4000/api/tasks/${task.id}`, {
+      await apiFetch(`/api/tasks/${task.id}`, {
         method: "DELETE",
       });
 
@@ -304,7 +304,7 @@ export default function TaskDetailsPanel({ task, onClose, onDeleted }) {
   return (
     <>
       {/* MAIN PANEL */}
-      <div className="w-[420px] bg-white border-l shadow-xl flex flex-col">
+      <div className="w-[420px] bg-white border-l shadow-xl flex flex-col rounded-xl">
 
         {/* HEADER */}
         <div className="flex items-center justify-between px-5 py-4 border-b">

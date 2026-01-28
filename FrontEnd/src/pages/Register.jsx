@@ -375,6 +375,7 @@ import { auth } from "../firebase";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import LoginIllustration from "../assets/illustrations/login.svg";
+import { apiFetch } from "../services/api";
 
 export default function Register() {
   const [name, setName] = useState("");
@@ -427,68 +428,119 @@ export default function Register() {
     return null;
   };
 
+  // const handleRegister = async (e) => {
+  //   e.preventDefault();
+  //   setError("");
+
+  //   const validationError = validate();
+  //   if (validationError) {
+  //     setError(validationError);
+  //     return;
+  //   }
+
+  //   setLoading(true);
+
+  //   try {
+  //     const userCredential = await createUserWithEmailAndPassword(
+  //       auth,
+  //       email,
+  //       password
+  //     );
+
+  //     await sendEmailVerification(userCredential.user);
+
+  //     const token = await userCredential.user.getIdToken();
+  //     localStorage.setItem("token", token);
+
+  //     const res = await apiFetch("/api/users/register", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //       body: JSON.stringify({ name }),
+  //     });
+
+  //     if (!res.ok) throw new Error("Backend error");
+
+  //     const meRes = await apiFetch("/api/users/me", {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
+
+  //     if (!meRes.ok) throw new Error("Failed to fetch user profile");
+
+  //     const data = await meRes.json();
+
+  //     toast.success("Registration successful 🎉 Please verify your email.");
+
+  //     if (data.role === "admin") {
+  //       navigate("/admin");
+  //     } else {
+  //       navigate("/user");
+  //     }
+  //   } catch (err) {
+  //     if (err.code === "auth/email-already-in-use") {
+  //       setError("Email already registered");
+  //     } else {
+  //       setError(err.message || "Something went wrong");
+  //     }
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
   const handleRegister = async (e) => {
-    e.preventDefault();
-    setError("");
+  e.preventDefault();
+  setError("");
 
-    const validationError = validate();
-    if (validationError) {
-      setError(validationError);
-      return;
+  const validationError = validate();
+  if (validationError) {
+    setError(validationError);
+    return;
+  }
+
+  setLoading(true);
+
+  try {
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+    await sendEmailVerification(userCredential.user);
+
+    const token = await userCredential.user.getIdToken();
+    localStorage.setItem("token", token);
+
+    // ✅ backend register
+    await apiFetch("/api/users/register", {
+      method: "POST",
+      body: JSON.stringify({ name }),
+    });
+
+    // ✅ fetch user profile
+    const data = await apiFetch("/api/users/me");
+
+    toast.success("Registration successful 🎉 Please verify your email.");
+
+    if (data.role === "admin") {
+      navigate("/admin");
+    } else {
+      navigate("/user");
     }
-
-    setLoading(true);
-
-    try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-
-      await sendEmailVerification(userCredential.user);
-
-      const token = await userCredential.user.getIdToken();
-      localStorage.setItem("token", token);
-
-      const res = await fetch("http://localhost:4000/api/users/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ name }),
-      });
-
-      if (!res.ok) throw new Error("Backend error");
-
-      const meRes = await fetch("http://localhost:4000/api/users/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!meRes.ok) throw new Error("Failed to fetch user profile");
-
-      const data = await meRes.json();
-
-      toast.success("Registration successful 🎉 Please verify your email.");
-
-      if (data.role === "admin") {
-        navigate("/admin");
-      } else {
-        navigate("/user");
-      }
-    } catch (err) {
-      if (err.code === "auth/email-already-in-use") {
-        setError("Email already registered");
-      } else {
-        setError(err.message || "Something went wrong");
-      }
-    } finally {
-      setLoading(false);
+  } catch (err) {
+    if (err.code === "auth/email-already-in-use") {
+      setError("Email already registered");
+    } else {
+      setError(err.message || "Something went wrong");
     }
-  };
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   // ================= UI (FIGMA MATCHED) =================
   return (

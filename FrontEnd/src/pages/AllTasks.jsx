@@ -404,7 +404,7 @@ export default function AllTasks() {
   const fetchTasks = async () => {
     try {
       setLoading(true);
-      const data = await apiFetch("http://localhost:4000/api/tasks");
+      const data = await apiFetch("/api/tasks");
       setTasks(data);
     } catch (e) {
       setError(e.message || "Failed to load tasks");
@@ -472,11 +472,10 @@ export default function AllTasks() {
                 <button
                   key={f}
                   onClick={() => setFilter(f)}
-                  className={`px-3 py-1 rounded-full text-sm border ${
-                    filter === f
+                  className={`px-3 py-1 rounded-full text-sm border ${filter === f
                       ? "bg-indigo-600 text-white border-indigo-600"
                       : "text-gray-600 hover:bg-gray-100"
-                  }`}
+                    }`}
                 >
                   {f === "all" ? "All" : f.replace("-", " ")}
                 </button>
@@ -491,11 +490,10 @@ export default function AllTasks() {
             {!loading && (
               <div className="flex gap-6">
                 <div
-                  className={`transition-all duration-300 ${
-                    selectedTask
+                  className={`transition-all duration-300 ${selectedTask
                       ? "w-[calc(100%-420px)]"
                       : "w-full"
-                  }`}
+                    }`}
                 >
                   <div className="bg-white rounded-xl border overflow-x-auto">
                     <table className="w-full text-sm">
@@ -524,9 +522,8 @@ export default function AllTasks() {
                             </td>
                             <td className="p-4">
                               <span
-                                className={`px-3 py-1 rounded-full text-xs font-medium ${
-                                  STATUS_STYLES[task.status]
-                                }`}
+                                className={`px-3 py-1 rounded-full text-xs font-medium ${STATUS_STYLES[task.status]
+                                  }`}
                               >
                                 {task.status.replace("-", " ")}
                               </span>
@@ -560,12 +557,21 @@ export default function AllTasks() {
                   </div>
                 </div>
 
-                {selectedTask && (
+                {/* {selectedTask && (
                   <TaskDetailsPanel
                     task={selectedTask}
                     onClose={() => setSelectedTask(null)}
                     onDeleted={fetchTasks}
                   />
+                )} */}
+                {selectedTask && (
+                  <div className="self-start">
+                    <TaskDetailsPanel
+                      task={selectedTask}
+                      onClose={() => setSelectedTask(null)}
+                      onDeleted={fetchTasks}
+                    />
+                  </div>
                 )}
               </div>
             )}

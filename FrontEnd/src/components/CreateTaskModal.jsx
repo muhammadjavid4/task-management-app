@@ -145,7 +145,7 @@ export default function CreateTaskModal({ open, onClose, onCreated }) {
 
   useEffect(() => {
     if (!open) return;
-    apiFetch("http://localhost:4000/api/users")
+    apiFetch("/api/users")
       .then(setUsers)
       .catch(() => setUsers([]));
   }, [open]);
@@ -162,7 +162,7 @@ export default function CreateTaskModal({ open, onClose, onCreated }) {
       setLoading(true);
       setError("");
 
-      await apiFetch("http://localhost:4000/api/tasks", {
+      await apiFetch("/api/tasks", {
         method: "POST",
         body: JSON.stringify({
           title,

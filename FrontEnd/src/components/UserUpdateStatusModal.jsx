@@ -280,7 +280,7 @@ export default function UserUpdateStatusModal({
       setLoading(true);
 
       await apiFetch(
-        `http://localhost:4000/api/tasks/${task.id}/status`,
+        `/api/tasks/${task.id}/status`,
         {
           method: "PATCH",
           body: JSON.stringify({ status }),

@@ -18,10 +18,13 @@
 
 //   return res.json();
 // };
+
+
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 export const apiFetch = async (url, options = {}) => {
   const token = localStorage.getItem("token");
 
-  const res = await fetch(url, {
+  const res = await fetch(`${BASE_URL}${url}`, {
     ...options,
     headers: {
       "Content-Type": "application/json",

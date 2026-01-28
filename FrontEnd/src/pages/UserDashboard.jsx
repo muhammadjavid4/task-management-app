@@ -368,7 +368,7 @@ export default function UserDashboard() {
 
   const fetchStats = async () => {
     setLoading(true);
-    const data = await apiFetch("http://localhost:4000/api/tasks/my");
+    const data = await apiFetch("/api/tasks/my");
 
     const pending = data.filter((t) => t.status === "pending").length;
     const inProgress = data.filter((t) => t.status === "in-progress").length;

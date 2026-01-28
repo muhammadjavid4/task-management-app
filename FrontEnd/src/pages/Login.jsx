@@ -332,6 +332,7 @@ import { auth } from "../firebase";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import LoginIllustration from "../assets/illustrations/login.svg";
+import { apiFetch } from "../services/api";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -341,60 +342,106 @@ export default function Login() {
 
   const navigate = useNavigate();
 
+  // const handleLogin = async (e) => {
+  //   e.preventDefault();
+  //   setError("");
+
+  //   if (!email || !password) {
+  //     setError("Email and password are required");
+  //     return;
+  //   }
+
+  //   setLoading(true);
+
+  //   try {
+  //     const userCredential = await signInWithEmailAndPassword(
+  //       auth,
+  //       email,
+  //       password
+  //     );
+
+  //     const token = await userCredential.user.getIdToken();
+  //     localStorage.setItem("token", token);
+
+  //     const res = await fetch("http://localhost:4000/api/users/me", {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
+
+  //     if (!res.ok) {
+  //       throw new Error("Unable to fetch user profile");
+  //     }
+
+  //     const data = await res.json();
+
+  //     if (data.role === "admin") {
+  //       navigate("/admin");
+  //       toast.success("Welcome Admin!");
+  //     } else {
+  //       navigate("/user");
+  //       toast.success("Login successful!");
+  //     }
+  //   } catch (err) {
+  //     if (err.code === "auth/user-not-found") {
+  //       setError("No account found with this email");
+  //     } else if (err.code === "auth/wrong-password") {
+  //       setError("Incorrect password");
+  //     } else if (err.code === "auth/invalid-credential") {
+  //       setError("Invalid email or password");
+  //     } else {
+  //       setError("Login failed. Please try again.");
+  //     }
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
   const handleLogin = async (e) => {
-    e.preventDefault();
-    setError("");
+  e.preventDefault();
+  setError("");
 
-    if (!email || !password) {
-      setError("Email and password are required");
-      return;
+  if (!email || !password) {
+    setError("Email and password are required");
+    return;
+  }
+
+  setLoading(true);
+
+  try {
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+    const token = await userCredential.user.getIdToken();
+    localStorage.setItem("token", token);
+
+    // ✅ apiFetch already returns data
+    const data = await apiFetch("/api/users/me");
+
+    if (data.role === "admin") {
+      navigate("/admin");
+      toast.success("Welcome Admin!");
+    } else {
+      navigate("/user");
+      toast.success("Login successful!");
     }
-
-    setLoading(true);
-
-    try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-
-      const token = await userCredential.user.getIdToken();
-      localStorage.setItem("token", token);
-
-      const res = await fetch("http://localhost:4000/api/users/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!res.ok) {
-        throw new Error("Unable to fetch user profile");
-      }
-
-      const data = await res.json();
-
-      if (data.role === "admin") {
-        navigate("/admin");
-        toast.success("Welcome Admin!");
-      } else {
-        navigate("/user");
-        toast.success("Login successful!");
-      }
-    } catch (err) {
-      if (err.code === "auth/user-not-found") {
-        setError("No account found with this email");
-      } else if (err.code === "auth/wrong-password") {
-        setError("Incorrect password");
-      } else if (err.code === "auth/invalid-credential") {
-        setError("Invalid email or password");
-      } else {
-        setError("Login failed. Please try again.");
-      }
-    } finally {
-      setLoading(false);
+  } catch (err) {
+    if (err.code === "auth/user-not-found") {
+      setError("No account found with this email");
+    } else if (err.code === "auth/wrong-password") {
+      setError("Incorrect password");
+    } else if (err.code === "auth/invalid-credential") {
+      setError("Invalid email or password");
+    } else {
+      setError("Login failed. Please try again.");
     }
-  };
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="min-h-screen flex">

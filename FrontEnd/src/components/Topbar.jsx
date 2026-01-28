@@ -110,7 +110,7 @@ export default function Topbar({ search, setSearch }) {
   useEffect(() => {
     const fetchMe = async () => {
       try {
-        const data = await apiFetch("http://localhost:4000/api/users/me");
+        const data = await apiFetch("/api/users/me");
         setUser(data);
       } catch (err) {
         console.error("Failed to fetch user");

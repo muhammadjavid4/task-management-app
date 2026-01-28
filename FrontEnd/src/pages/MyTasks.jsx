@@ -643,7 +643,7 @@ export default function MyTasks({ search, onStatusUpdated }) {
     const [statusTask, setStatusTask] = useState(null);
 
     const fetchMyTasks = async () => {
-        const data = await apiFetch("http://localhost:4000/api/tasks/my");
+        const data = await apiFetch("/api/tasks/my");
         setTasks(data);
         setSelectedTask(null);
     };
